@@ -1,14 +1,20 @@
-import React from 'react'
+'use client';
+import React from 'react';
+import cookie from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
-const UserDashboardPage = () => {
-
+function HomePage() {
+  const router = useRouter();
+  const handleLogout = ()=>{
+    cookie.remove('session');
+    router.push('/login');
+  }
   return (
-    <>
-      <div>
-        <button></button>
-      </div>
-    </>
+    <div>Home Page
+
+      <button onClick={handleLogout}>LOGOUT</button>
+    </div>
   )
 }
 
-export default UserDashboardPage
+export default HomePage

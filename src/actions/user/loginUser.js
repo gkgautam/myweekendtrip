@@ -49,7 +49,7 @@ export async function loginUser(values) {
       email: checkUserExist.email
     }
 
-    const session_token = jwt.sign(payLoadData, process.env.JWT_SECRET_KEY, { expiresIn: "120s" });
+    const session_token = jwt.sign(payLoadData, process.env.JWT_SECRET_KEY, { expiresIn: "2h" });
 
     if (session_token) {
 
