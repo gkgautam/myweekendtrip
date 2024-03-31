@@ -2,12 +2,22 @@
 
 import toast from 'react-hot-toast';
 import { useFormik } from 'formik';
-import { loginUser } from '@/actions/user/loginUser';
+// import { loginUser } from '@/actions/user/loginUser';
 import { useRouter } from 'next/navigation';
+import { useSession, signIn } from "next-auth/react";
+import { useEffect } from 'react';
 
 const LoginPage = () => {
 
   const router = useRouter();
+  const { status } = useSession();
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.push('/account/home'); // Redirect after rendering
+    }
+  }, [status]);
+
 
   const formik = useFormik({
     initialValues: {
@@ -18,11 +28,27 @@ const LoginPage = () => {
   });
 
   async function onSubmit(values) {
-    const res = await loginUser(values);
-    console.log(res);
-    toast.success(res.message);
-    if (res.success) {
-      router.push("/account/home");
+    // const res = await loginUser(values);
+    // console.log(res);
+    // toast.success(res.message);
+    // if (res.success) {
+    //   router.push("/account/home");
+    // }
+
+    const res = await signIn("credentials", {
+      redirect: false,
+      email: values.email,
+      password: values.password,
+      callbackUrl: "/account/home"
+    });
+    // api calling here for login
+
+    if (res.error == null) {
+      toast.success("Login success");
+      redirect("/account/home", "replace");
+    }
+    else {
+      toast.error(res.error, { duration: 4000 });
     }
   }
 
